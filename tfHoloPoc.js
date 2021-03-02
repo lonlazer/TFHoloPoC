@@ -40,6 +40,8 @@ async function app() {
     await createVideoElement();
     await setupWebcam();
 
+    alert("Ready! Please click on the AR button in the bottom right corner to start!")
+
     while (true) {
 
         var start = new Date().getTime();
