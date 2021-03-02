@@ -28,20 +28,7 @@ async function setupWebcam() {
     });
 }
 
-async function app() {
-    console.log('Loading mobilenet..');
-
-    // Load the model.
-    net = await mobilenet.load();
-    console.log('Successfully loaded model');
-
-    console.log("Used tf.js backend: " + tf.getBackend());
-
-    await createVideoElement();
-    await setupWebcam();
-
-    alert("Ready! Please click on the AR button in the bottom right corner to start!")
-
+async function run() {
     while (true) {
 
         var start = new Date().getTime();
@@ -58,4 +45,29 @@ async function app() {
     }
 }
 
-app();
+async function setup() {
+    console.log('Loading mobilenet..');
+
+    // Load the model.
+    net = await mobilenet.load();
+    console.log('Successfully loaded model');
+
+    console.log("Used tf.js backend: " + tf.getBackend());
+
+    await createVideoElement();
+    await setupWebcam();
+
+    document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
+
+    // Add listener to AR start button
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        // Set text color white
+        document.getElementById("output").setAttribute("text", "color", "#ffffff");
+        run();
+     });
+     
+
+    
+}
+
+setup();
