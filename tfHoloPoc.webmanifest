@@ -1,0 +1,17 @@
+{
+  "name": "TFHoloPOC Progressive Web App",
+  "short_name": "TFHoloPOC",
+  "description": "Progressive Web App",
+  "icons": [
+    {
+             "src" :"/img/icon.png",
+             "sizes" : "144x144",
+             "type" : "image/png",
+             "purpose": "any"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "theme_color": "#B12A34",
+  "background_color": "#B12A34"
+}

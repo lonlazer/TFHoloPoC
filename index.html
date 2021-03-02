@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <title>TFHoloPOC</title>
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
+
+    <link rel="manifest" href="tfHoloPoc.webmanifest">
+
+    <script src="registerServiceWorker.js"></script>
+</head>
+
+<body>
+
+
+    <a-scene>
+        <a-entity camera="active: true" look-controls wasd-controls position="0 1.6 0">
+            <a-circle color="#fff" radius="0.005" position="0 0 -1"></a-circle>
+
+            <a-entity id="output" text="value: Loading...; color: #fff; align: center; font: mozillavr;"
+                position="0 -0.20 -1" scale="0.8 0.8 0.8"></a-entity>
+
+
+        </a-entity>
+    </a-scene>
+
+
+    <script src="tfHoloPoc.js"></script>
+
+</body>
+
+</html>
