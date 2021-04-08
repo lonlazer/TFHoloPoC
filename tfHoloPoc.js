@@ -15,13 +15,14 @@ async function run() {
 
         let image = await captureImage();
 
-        var start = new Date().getTime();
-        const result = await net.predict(image);
-        var end = new Date().getTime();
-        var duration = end - start;
+        let result;
+        const time = await tf.time(() => result = net.predict(image));
+
+        let classId = result.argMax(1).dataSync();
+        let probability = result.gather(classId, 1).dataSync();
 
         //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
-        let outputText = result.argMax().ToString() + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
+        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(time.wallMs) +"ms)";
         //console.log(outputText);
         document.getElementById("output").setAttribute("text", "value", outputText);
 
@@ -34,7 +35,7 @@ async function setup() {
 
     // Load the model.
     //net = await mobilenet.load();
-    net = await tf.loadLayersModel('https://lonlazer.github.io/TFHoloPoC//MobileNetV2/model.json');
+    net = await tf.loadLayersModel('https://leonsthinkpad.lan:4443/MobileNetV2/model.json');
     console.log('Successfully loaded model');
 
     console.log("Used tf.js backend: " + tf.getBackend());
