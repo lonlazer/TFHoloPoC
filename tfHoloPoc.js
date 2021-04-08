@@ -65,7 +65,7 @@ async function setup() {
     console.log("Used tf.js backend: " + tf.getBackend());
 
     createVideoElement();
-    setupWebcam();
+    await setupWebcam();
     
     /*
     // Official TensorFlow.js way - currently not working on Chrome based Edge on HoloLens 2 :(
