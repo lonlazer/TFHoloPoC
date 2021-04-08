@@ -7,7 +7,7 @@ var videoElement;
     const processedImg =
         tf.tidy(() => img.expandDims(0).toFloat().div(127).sub(1));
     img.dispose();
-    return img;
+    return processedImg;
   }
 
 async function run() {
@@ -21,7 +21,7 @@ async function run() {
         var duration = end - start;
 
         //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
+        let outputText = result.argMax().ToString() + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
         //console.log(outputText);
         document.getElementById("output").setAttribute("text", "value", outputText);
 
