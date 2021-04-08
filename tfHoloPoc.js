@@ -48,9 +48,7 @@ async function run() {
         let classId = result.argMax(1).dataSync();
         let probability = result.gather(classId, 1).dataSync();
 
-        //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
         let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(time.wallMs) + "ms)";
-        //console.log(outputText);
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         await tf.nextFrame();
@@ -61,7 +59,6 @@ async function setup() {
     console.log('Loading mobilenet..');
 
     // Load the model.
-    //net = await mobilenet.load();
     net = await tf.loadLayersModel(window.location.href + 'MobileNetV2/model.json');
     console.log('Successfully loaded model');
 
