@@ -2,7 +2,7 @@
 let cacheName = 'TFHoloPoC_Cache';
 let contentToCache = [
     'https://aframe.io/releases/1.2.0/aframe.min.js',
-    'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js',
+    'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js',
     'https://cdn.aframe.io/fonts/mozillavr.fnt',
     'registerServiceWorker.js',
     'serviceWorker.js',
