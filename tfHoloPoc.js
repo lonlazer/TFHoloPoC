@@ -9,7 +9,7 @@ async function captureImage() {
     return normalizedImg;
 }
 
-async function createVideoElement() {
+function createVideoElement() {
     webcamElement = document.createElement('video');
     webcamElement.setAttribute("autoplay", "");
     webcamElement.setAttribute("playsinline", "");
@@ -67,7 +67,7 @@ async function setup() {
 
     console.log("Used tf.js backend: " + tf.getBackend());
 
-    await createVideoElement();
+    createVideoElement();
     await setupWebcam();
     
     /*
@@ -86,9 +86,11 @@ async function setup() {
         document.getElementById("output").setAttribute("text", "color", "#ffffff");
         run();
     });
-
-
-
 }
 
-setup();
+(async () => {
+    try {
+        await setup();
+    } catch (e) {
+    }
+})();
