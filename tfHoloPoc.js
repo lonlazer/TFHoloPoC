@@ -1,7 +1,7 @@
-const net;
-let webcamElement;
-const webcam;
-const videoElement;
+var net;
+var webcamElement;
+var webcam;
+var videoElement;
 
 async function createVideoElement() {
     webcamElement = document.createElement('video');
