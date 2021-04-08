@@ -35,7 +35,7 @@ async function setup() {
 
     // Load the model.
     //net = await mobilenet.load();
-    net = await tf.loadLayersModel('https://leonsthinkpad.lan:4443/MobileNetV2/model.json');
+    net = await tf.loadLayersModel(window.location.href + '/MobileNetV2/model.json');
     console.log('Successfully loaded model');
 
     console.log("Used tf.js backend: " + tf.getBackend());
