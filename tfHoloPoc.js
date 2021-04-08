@@ -1,14 +1,41 @@
 var net;
-var webcam;
-var videoElement;
+var webcamElement;
 
- async function captureImage() {
-    const img = await webcam.capture();
-    const processedImg =
-        tf.tidy(() => img.expandDims(0).toFloat().div(127).sub(1));
+async function captureImage() {
+    const img = tf.browser.fromPixels(webcamElement);
+    const normalizedImg =
+        tf.tidy(() => img.expandDims(0).toFloat().div(127).sub(1)).resizeBilinear([224, 224], true);
     img.dispose();
-    return processedImg;
-  }
+    return normalizedImg;
+}
+
+async function createVideoElement() {
+    webcamElement = document.createElement('video');
+    webcamElement.setAttribute("autoplay", "");
+    webcamElement.setAttribute("playsinline", "");
+    webcamElement.setAttribute("width", "224");
+    webcamElement.setAttribute("height", "224");
+}
+
+async function setupWebcam() {
+    return new Promise((resolve, reject) => {
+        const navigatorAny = navigator;
+        navigator.getUserMedia = navigator.getUserMedia ||
+            navigatorAny.webkitGetUserMedia || navigatorAny.mozGetUserMedia ||
+            navigatorAny.msGetUserMedia;
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ video: true },
+                stream => {
+                    webcamElement.srcObject = stream;
+                    webcamElement.addEventListener('loadeddata', () => resolve(), false);
+                },
+                error => reject());
+        } else {
+            reject();
+        }
+    });
+}
+
 
 async function run() {
     while (true) {
@@ -22,7 +49,7 @@ async function run() {
         let probability = result.gather(classId, 1).dataSync();
 
         //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
-        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(time.wallMs) +"ms)";
+        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(time.wallMs) + "ms)";
         //console.log(outputText);
         document.getElementById("output").setAttribute("text", "value", outputText);
 
@@ -40,13 +67,16 @@ async function setup() {
 
     console.log("Used tf.js backend: " + tf.getBackend());
 
-    //await createVideoElement();
-    //await setupWebcam();
+    await createVideoElement();
+    await setupWebcam();
+    
+    /*
+    // Official TensorFlow.js way - currently not working on Chrome based Edge on HoloLens 2 :(
     videoElement = document.createElement('video');
     videoElement.width = 224;
     videoElement.height = 224;
     webcam = await tf.data.webcam(videoElement);
-
+    */
 
     document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
 
@@ -55,10 +85,10 @@ async function setup() {
         // Set text color white
         document.getElementById("output").setAttribute("text", "color", "#ffffff");
         run();
-     });
-     
+    });
 
-    
+
+
 }
 
 setup();
