@@ -64,7 +64,7 @@ async function setup() {
 
     console.log("Used tf.js backend: " + tf.getBackend());
 
-    createVideoElement();
+    await createVideoElement();
     await setupWebcam();
     
     /*
