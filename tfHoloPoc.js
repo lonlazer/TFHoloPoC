@@ -42,13 +42,16 @@ async function run() {
 
         let image = await captureImage();
 
-        let result;
-        const time = await tf.time(() => result = net.predict(image));
+        let start = performance.now();
+        let result = net.predict(image);
+        let end = performance.now();
+
+        let duration = end - start;
 
         let classId = result.argMax(1).dataSync();
         let probability = result.gather(classId, 1).dataSync();
 
-        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(time.wallMs) + "ms)";
+        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(duration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         await tf.nextFrame();
