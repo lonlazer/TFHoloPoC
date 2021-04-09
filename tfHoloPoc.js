@@ -2,10 +2,8 @@ var net;
 var webcamElement;
 
 async function captureImage() {
-    const img = tf.browser.fromPixels(webcamElement);
     const normalizedImg =
-        tf.tidy(() => img.expandDims(0).toFloat().div(127).sub(1)).resizeBilinear([224, 224], true);
-    img.dispose();
+        tf.tidy(() => tf.browser.fromPixels(webcamElement).expandDims(0).toFloat().div(127).sub(1)).resizeBilinear([224, 224], true);
     return normalizedImg;
 }
 
