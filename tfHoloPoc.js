@@ -42,6 +42,8 @@ async function run() {
 
         let image = await captureImage();
 
+        tf.engine().startScope()
+
         let start = performance.now();
         let result = net.predict(image);
         let end = performance.now();
@@ -53,6 +55,8 @@ async function run() {
 
         let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(duration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
+
+        tf.engine().endScope()
 
         await tf.nextFrame();
     }
