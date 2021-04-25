@@ -31,14 +31,12 @@ async function setupWebcam() {
 async function run() {
     while (true) {
 
-        var start = new Date().getTime();
+        var start = performance.now();
         const result = await net.classify(webcamElement);
-        var end = new Date().getTime();
+        var end = performance.now();
         var duration = end - start;
 
-        //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
         let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
-        //console.log(outputText);
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         await tf.nextFrame();
