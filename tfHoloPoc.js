@@ -60,7 +60,7 @@ async function setup() {
     // Add listener to AR start button
     document.querySelector('a-scene').addEventListener('enter-vr', function () {
         // Set text color white
-        document.getElementById("output").setAttribute("text", "color", "#ffffff");
+        //document.getElementById("output").setAttribute("text", "color", "#ffffff");
         run();
      });
      
