@@ -1,7 +1,18 @@
-let net;
-let webcamElement;
+var net;
+var webcamElement;
 
-async function createVideoElement() {
+async function captureImage() {
+    return tf.tidy(() => {
+        const img = tf.browser.fromPixels(webcamElement).toFloat();
+        const offset = tf.scalar(127.5);
+        const normalized = img.sub(offset).div(offset);
+        const resized = tf.image.resizeBilinear(normalized, [224, 224], true);
+        const batched = resized.expandDims(0);
+        return batched;
+    });
+}
+
+function createVideoElement() {
     webcamElement = document.createElement('video');
     webcamElement.setAttribute("autoplay", "");
     webcamElement.setAttribute("playsinline", "");
@@ -28,17 +39,25 @@ async function setupWebcam() {
     });
 }
 
+
 async function run() {
     while (true) {
 
-        var start = new Date().getTime();
-        const result = await net.classify(webcamElement);
-        var end = new Date().getTime();
-        var duration = end - start;
+        let image = await captureImage();
 
-        //document.getElementById('console').innerText = "Class: " + result[0].className + "\nProbability: " + result[0].probability * 100 + "%\nTime: " + duration + "ms";
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
-        //console.log(outputText);
+        let start = performance.now();
+        let result = net.predict(image);
+        let end = performance.now();
+
+        let duration = end - start;
+
+        let classId = result.argMax(1).dataSync();
+        let probability = result.gather(classId, 1).dataSync();
+
+        image.dispose()
+        result.dispose()
+
+        let outputText = labels[classId] + "\n(" + Math.round(probability * 100) + "% | " + Math.round(duration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         await tf.nextFrame();
@@ -49,13 +68,24 @@ async function setup() {
     console.log('Loading mobilenet..');
 
     // Load the model.
-    net = await mobilenet.load();
+    //net = await tf.loadLayersModel(window.location.href + 'MobileNetV2/model.json');
+    const modelUrl =
+        'https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v2_100_224/classification/3/default/1';
+    net = await tf.loadGraphModel(modelUrl, {fromTFHub: true});
     console.log('Successfully loaded model');
 
     console.log("Used tf.js backend: " + tf.getBackend());
 
     await createVideoElement();
     await setupWebcam();
+
+    /*
+    // Official TensorFlow.js way - currently not working on Chrome based Edge on HoloLens 2 :(
+    videoElement = document.createElement('video');
+    videoElement.width = 224;
+    videoElement.height = 224;
+    webcam = await tf.data.webcam(videoElement);
+    */
 
     document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
 
@@ -64,10 +94,7 @@ async function setup() {
         // Set text color white
         document.getElementById("output").setAttribute("text", "color", "#ffffff");
         run();
-     });
-     
-
-    
+    });
 }
 
 setup();
