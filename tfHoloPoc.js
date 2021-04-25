@@ -36,7 +36,7 @@ async function run() {
         var end = performance.now();
         var duration = end - start;
 
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + duration +"ms)";
+        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) +"ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         await tf.nextFrame();
