@@ -31,7 +31,7 @@ async function setupWebcam() {
 async function run() {
     let i = 0;
     let blockSize = 100;
-    let times[] = new Array(blockSize);
+    let times = new Array(blockSize);
 
     let avgDuration = -1;
 
