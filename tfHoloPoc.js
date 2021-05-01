@@ -28,9 +28,9 @@ async function setupWebcam() {
     });
 }
 
-async function preProcess(input) {
+async function preProcess() {
     return tf.tidy(() => {
-        img = tf.browser.fromPixels(input);        
+        img = tf.browser.fromPixels(webcamElement);        
 
         // Normalize the image from [0, 255] to [inputMin, inputMax].
         let normalized = tf.add(
@@ -64,7 +64,7 @@ async function run() {
             i = 0;
         }
 
-        let image = preProcess(webcamElement);
+        let image = preProcess();
 
         var start = performance.now();
         const result = await net.classify(image);
