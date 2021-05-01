@@ -28,11 +28,9 @@ async function setupWebcam() {
     });
 }
 
-async function preProcess() {
+async function preProcess(input) {
     return tf.tidy(() => {
-        if (!(img instanceof tf.Tensor)) {
-            img = tf.browser.fromPixels(img);
-        }
+        img = tf.browser.fromPixels(input);        
 
         // Normalize the image from [0, 255] to [inputMin, inputMax].
         let normalized = tf.add(
