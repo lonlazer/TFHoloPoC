@@ -6,6 +6,7 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
     <script src="https://unpkg.com/@tensorflow-models/mobilenet@2.0.0"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
     <link rel="manifest" href="tfHoloPoc.webmanifest">
 
@@ -15,7 +16,7 @@
 
 <body>
 
-    <a-scene background="transparent: true">
+    <a-scene embedded>
         <a-entity camera="active: true" look-controls wasd-controls position="0 1.6 0">
             <a-circle color="#fff" radius="0.005" position="0 0 -1"></a-circle>
 
