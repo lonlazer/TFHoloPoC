@@ -28,28 +28,6 @@ async function setupWebcam() {
     });
 }
 
-async function preProcess() {
-    return tf.tidy(() => {
-        img = tf.browser.fromPixels(webcamElement);        
-
-        // Normalize the image from [0, 255] to [inputMin, inputMax].
-        let normalized = tf.add(
-            tf.mul(tf.cast(img, 'float32'), this.normalizationConstant),
-            this.inputMin);
-
-        // Resize the image to
-        let resized = normalized;
-        if (img.shape[0] !== IMAGE_SIZE || img.shape[1] !== IMAGE_SIZE) {
-            const alignCorners = true;
-            resized = tf.image.resizeBilinear(
-                normalized, [IMAGE_SIZE, IMAGE_SIZE], alignCorners);
-        }
-
-        // Reshape so we can pass it to predict.
-        const batched = tf.reshape(resized, [-1, IMAGE_SIZE, IMAGE_SIZE, 3]);
-    });
-}
-
 async function run() {
     let i = 0;
     let blockSize = 100;
@@ -64,14 +42,12 @@ async function run() {
             i = 0;
         }
 
-        let image = preProcess();
-
         var start = performance.now();
-        const result = await net.classify(image);
+        const result = await net.classify(webcamElement);
         var end = performance.now();
         var duration = end - start;
 
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) + "ms | " + Math.round(avgDuration) + "ms (avg))";
+        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) + "ms | Avg:" + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         times[i] = duration;
