@@ -1,5 +1,6 @@
-// Perform install steps
-let cacheName = 'TFHoloPoC_Cache';
+// Adapted from https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
+
+let cacheName = 'TFHoloPoC_Cache_v1.0';
 let contentToCache = [
     'https://aframe.io/releases/1.2.0/aframe.min.js',
     'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js',
@@ -16,6 +17,9 @@ let contentToCache = [
     'MobileNetV2/group1-shard1of4.bin'
 ];
 
+/**
+ * Caches relevant file
+ */
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
     e.waitUntil(
@@ -26,6 +30,9 @@ self.addEventListener('install', (e) => {
     );
 });
 
+/**
+ * Responds to fetch with files from cache
+ */
 self.addEventListener('fetch', (e) => {
     e.respondWith((async () => {
         const r = await caches.match(e.request);
@@ -39,6 +46,9 @@ self.addEventListener('fetch', (e) => {
     })());
 });
 
+/**
+ * For updating
+ */
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keyList) => {

@@ -1,3 +1,4 @@
+// Source: https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json
 var labels = ["tench",
 "goldfish",
 "great white shark",
