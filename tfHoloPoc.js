@@ -29,15 +29,29 @@ async function setupWebcam() {
 }
 
 async function run() {
+    let i = 0;
+    let blockSize = 100;
+    let times[] = new Array(blockSize);
+
+    let avgDuration = -1;
+
+
     while (true) {
+        if (i == blockSize) {
+            avgDuration = calcAvgArray(times);
+            i = 0;
+        }
 
         var start = performance.now();
         const result = await net.classify(webcamElement);
         var end = performance.now();
         var duration = end - start;
 
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) +"ms)";
+        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) + "ms | " + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
+
+        time[i] = duraction;
+        i++;
 
         await tf.nextFrame();
     }
@@ -62,10 +76,17 @@ async function setup() {
         // Set text color white
         document.getElementById("output").setAttribute("text", "color", "#ffffff");
         run();
-     });
-     
+    });
+}
 
-    
+function calcAvgArray(array) {
+    let sum = 0;
+
+    for (let i = 0; i < array.length; i++) {
+        sum += array[i];
+    }
+
+    return sum / array.length;
 }
 
 setup();
