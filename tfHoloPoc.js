@@ -50,7 +50,7 @@ async function run() {
         let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) + "ms | " + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
-        time[i] = duraction;
+        times[i] = duration;
         i++;
 
         await tf.nextFrame();
