@@ -28,6 +28,30 @@ async function setupWebcam() {
     });
 }
 
+async function preProcess() {
+    return tf.tidy(() => {
+        if (!(img instanceof tf.Tensor)) {
+            img = tf.browser.fromPixels(img);
+        }
+
+        // Normalize the image from [0, 255] to [inputMin, inputMax].
+        let normalized = tf.add(
+            tf.mul(tf.cast(img, 'float32'), this.normalizationConstant),
+            this.inputMin);
+
+        // Resize the image to
+        let resized = normalized;
+        if (img.shape[0] !== IMAGE_SIZE || img.shape[1] !== IMAGE_SIZE) {
+            const alignCorners = true;
+            resized = tf.image.resizeBilinear(
+                normalized, [IMAGE_SIZE, IMAGE_SIZE], alignCorners);
+        }
+
+        // Reshape so we can pass it to predict.
+        const batched = tf.reshape(resized, [-1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+    });
+}
+
 async function run() {
     let i = 0;
     let blockSize = 100;
@@ -42,8 +66,10 @@ async function run() {
             i = 0;
         }
 
+        let image = preProcess(webcamElement);
+
         var start = performance.now();
-        const result = await net.classify(webcamElement);
+        const result = await net.classify(image);
         var end = performance.now();
         var duration = end - start;
 
