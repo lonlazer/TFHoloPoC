@@ -76,7 +76,7 @@ async function setup() {
     console.log("Used tf.js backend: " + tf.getBackend());
 
     await createVideoElement();
-    await setupWebcam();
+    //await setupWebcam();
 
     document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
 
