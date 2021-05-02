@@ -1,12 +1,20 @@
 let net;
 let webcamElement;
+let cam;
 
 async function createVideoElement() {
+    /*
     webcamElement = document.createElement('video');
     webcamElement.setAttribute("autoplay", "");
     webcamElement.setAttribute("playsinline", "");
     webcamElement.setAttribute("width", "224");
     webcamElement.setAttribute("height", "224");
+    */
+
+    webcamElement = document.createElement('video');
+    webcamElement.width = 100;
+    webcamElement.height = 100;
+    cam = await tf.data.webcam(videoElement);
 }
 
 async function setupWebcam() {
@@ -35,6 +43,7 @@ async function run() {
 
     let avgDuration = -1;
 
+    const img = await cam.capture();
 
     while (true) {
         if (i == blockSize) {
@@ -43,7 +52,7 @@ async function run() {
         }
 
         var start = performance.now();
-        const result = await net.classify(webcamElement);
+        const result = await net.classify(img);
         var end = performance.now();
         var duration = end - start;
 
