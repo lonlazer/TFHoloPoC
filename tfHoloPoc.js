@@ -43,13 +43,13 @@ async function run() {
 
     let avgDuration = -1;
 
-    const img = await cam.capture();
-
     while (true) {
         if (i == blockSize) {
             avgDuration = calcAvgArray(times);
             i = 0;
         }
+
+        let img = await cam.capture();
 
         var start = performance.now();
         const result = await net.classify(img);
