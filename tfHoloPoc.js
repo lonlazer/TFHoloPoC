@@ -14,7 +14,7 @@ async function createVideoElement() {
     webcamElement = document.createElement('video');
     webcamElement.width = 100;
     webcamElement.height = 100;
-    cam = await tf.data.webcam(videoElement);
+    cam = await tf.data.webcam(webcamElement);
 }
 
 async function setupWebcam() {
