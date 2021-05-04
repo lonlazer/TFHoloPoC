@@ -1,12 +1,20 @@
 let net;
 let webcamElement;
+let cam;
 
 async function createVideoElement() {
+    /*
     webcamElement = document.createElement('video');
     webcamElement.setAttribute("autoplay", "");
     webcamElement.setAttribute("playsinline", "");
     webcamElement.setAttribute("width", "224");
     webcamElement.setAttribute("height", "224");
+    */
+
+    webcamElement = document.createElement('video');
+    webcamElement.width = 224;
+    webcamElement.height = 224;
+    cam = await tf.data.webcam(webcamElement);
 }
 
 async function setupWebcam() {
@@ -35,15 +43,16 @@ async function run() {
 
     let avgDuration = -1;
 
-
     while (true) {
         if (i == blockSize) {
             avgDuration = calcAvgArray(times);
             i = 0;
         }
 
+        let img = await cam.capture();
+
         var start = performance.now();
-        const result = await net.classify(webcamElement);
+        const result = await net.classify(img);
         var end = performance.now();
         var duration = end - start;
 
@@ -67,7 +76,7 @@ async function setup() {
     console.log("Used tf.js backend: " + tf.getBackend());
 
     await createVideoElement();
-    await setupWebcam();
+    //await setupWebcam();
 
     document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
 
