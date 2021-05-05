@@ -3,6 +3,7 @@ let webcamElement;
 
 async function createVideoElement() {
     webcamElement = document.createElement('video');
+    webcamElement.setAttribute("autoplay", "");
     webcamElement.setAttribute("playsinline", "");
     webcamElement.setAttribute("width", "224");
     webcamElement.setAttribute("height", "224");
@@ -15,6 +16,35 @@ async function setupWebcam() {
         navigator.getUserMedia = navigator.getUserMedia ||
             navigatorAny.webkitGetUserMedia || navigatorAny.mozGetUserMedia ||
             navigatorAny.msGetUserMedia;
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ video: true },
+                stream => {
+                    webcamElement.srcObject = stream;
+                    webcamElement.addEventListener('loadeddata', () => resolve(), false);
+                },
+                error => reject());
+        } else {
+            reject();
+        }
+    });
+}*/
+
+/*
+async function setupWebcam() {
+    return new Promise((resolve, reject) => {
+        const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+            width: {
+                ideal: 224
+            },
+            height: {
+                ideal: 224
+            },
+            facingMode: {
+                ideal: "environment"
+            }
+        }
+    });
         if (navigator.getUserMedia) {
             navigator.getUserMedia({ video: true },
                 stream => {
@@ -45,6 +75,7 @@ async function setupWebcam() {
     });
     webcamElement.srcObject = stream;
     webcamElement.play();
+    webcamElement.addEventListener('loadeddata', () => resolve(), false);
 }
 
 async function run() {
