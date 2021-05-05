@@ -110,7 +110,7 @@ async function run() {
 
         const predClassA = await result.argMax(1).data();
         const predClass = predClassA[0];
-        const probA = await result.array()[0][predClass];
+        const probA = await result.array();
         const prob = probA[0][predClass];
 
         result.dispose();
