@@ -32,8 +32,14 @@ async function setupWebcam() {
 async function setupWebcam() {
     const stream = await navigator.mediaDevices.getUserMedia({
         video: {
+            width: {
+                ideal: 224
+            },
+            height: {
+                ideal: 224
+            },
             facingMode: {
-                exact: "environment"
+                ideal: "environment"
             }
         }
     });
