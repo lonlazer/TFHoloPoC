@@ -104,11 +104,14 @@ async function run() {
         const img = preprocess(webcamElement);
 
         var start = performance.now();
-        const result = await net.classify(img);
+        const result = await net.predict(img);
         var end = performance.now();
         var duration = end - start;
 
-        let outputText = result[0].className + "\n(" + Math.round(result[0].probability * 100) + "% | " + Math.round(duration) + "ms | Avg: " + Math.round(avgDuration) + "ms)";
+        const resultArray = Array.from(result.dataSync());
+        const predClass = argMaxArray(resultArray);
+
+        let outputText = labels[predClass] + "\n(" + Math.round(resultArray[predClass] * 100) + "% | " + Math.round(duration) + "ms | Avg: " + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         times[i] = duration;
@@ -122,7 +125,8 @@ async function setup() {
     console.log('Loading mobilenet..');
 
     // Load the model.
-    net = await mobilenet.load();
+    //net = await mobilenet.load();
+    net = await tf.loadLayersModel(window.location.href + 'MobileNetV2/model.json');
     console.log('Successfully loaded model');
 
     console.log("Used tf.js backend: " + tf.getBackend());
@@ -139,6 +143,12 @@ async function setup() {
         run();
     });
 }
+
+// Adapted from https://gist.github.com/engelen/fbce4476c9e68c52ff7e5c2da5c24a28
+function argMaxArray(array) {
+    return [].map.call(array, (x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+}
+
 
 function calcAvgArray(array) {
     let sum = 0;
