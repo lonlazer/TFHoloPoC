@@ -1,6 +1,10 @@
 let net;
 let video;
 
+const IMAGE_SIZE = 224;
+const INPUT_MIN = 0;
+const INPUT_MAX = 1;
+
 /*
 async function setupWebcam() {
     return new Promise((resolve, reject) => {
@@ -23,17 +27,15 @@ async function setupWebcam() {
 
 
 function preprocess(img) {
-    const IMAGE_SIZE = 224;
-    const inputMin = 0;
-    const inputMax = 1;
+
 
     return tf.tidy(() => {
           img = tf.browser.fromPixels(img);
         
         // Normalize the image from [0, 255] to [inputMin, inputMax].
         const normalized = tf.add(
-            tf.mul(tf.cast(img, 'float32'), (inputMax - inputMin) / 255.0),
-            inputMin);
+            tf.mul(tf.cast(img, 'float32'), (INPUT_MAX - INPUT_MIN) / 255.0),
+            INPUT_MIN);
   
         // Resize the image to
         let resized = normalized;
@@ -66,12 +68,6 @@ async function setupWebcam() {
     const stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
-            width: {
-                ideal: 224
-            },
-            height: {
-                ideal: 224
-            },
             facingMode : {
                 ideal : "environment"
             }
