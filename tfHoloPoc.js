@@ -73,9 +73,6 @@ async function setupWebcam() {
             },
             height: {
                 ideal: 224
-            },
-            facingMode: {
-                ideal: "environment"
             }
         },
     });
