@@ -103,13 +103,15 @@ async function run() {
 
         const img = preprocess(webcamElement);
 
-        var start = performance.now();
+        const start = performance.now();
         const result = await net.predict(img);
-        var end = performance.now();
-        var duration = end - start;
+        const end = performance.now();
+        const duration = end - start;
 
-        const predClass = await result.argMax(1).data()[0];
-        const prob = await result.array()[0][predClass];
+        const predClassA = await result.argMax(1).data();
+        const predClass = predClassA[0];
+        const probA = await result.array()[0][predClass];
+        const prob = probA[0][predClass];
 
         result.dispose();
         img.dispose();
