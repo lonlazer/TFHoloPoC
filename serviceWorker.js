@@ -1,9 +1,9 @@
 // Adapted from https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-let cacheName = 'TFHoloPoC_Cache_v1.0';
+let cacheName = 'TFHoloPoC_Cache_v1.1';
 let contentToCache = [
     'https://aframe.io/releases/1.2.0/aframe.min.js',
-    'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js',
+    'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js',
     'https://cdn.aframe.io/fonts/mozillavr.fnt',
     'registerServiceWorker.js',
     'serviceWorker.js',

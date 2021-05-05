@@ -9,7 +9,7 @@ async function createVideoElement() {
     webcamElement.setAttribute("height", "224");
 }
 
-
+/*
 async function setupWebcam() {
     return new Promise((resolve, reject) => {
         const navigatorAny = navigator;
@@ -27,7 +27,7 @@ async function setupWebcam() {
             reject();
         }
     });
-}
+}*/
 
 
 function preprocess(img) {
@@ -58,7 +58,7 @@ function preprocess(img) {
       });
     }
 
-/*
+
 async function setupWebcam() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error(
@@ -73,10 +73,14 @@ async function setupWebcam() {
             },
             height: {
                 ideal: 224
+            },
+            facingMode : {
+                ideal : "environment"
             }
         },
     });
     webcamElement.srcObject = stream;
+    webcamElement.play();
 
     return new Promise((resolve) => {
         webcamElement.onloadedmetadata = () => {
@@ -84,8 +88,7 @@ async function setupWebcam() {
         };
     });
 
-    webcamElement.play();
-}*/
+}
 
 async function run() {
     let i = 0;
