@@ -55,8 +55,7 @@ function preprocess(img) {
 
 async function setupWebcam() {
     let webcamElement = document.createElement('video');
-    webcamElement.setAttribute("autoplay", "");
-    webcamElement.setAttribute("playsinline", "");
+
     webcamElement.setAttribute("width", "224");
     webcamElement.setAttribute("height", "224");
 
