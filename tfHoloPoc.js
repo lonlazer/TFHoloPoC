@@ -59,8 +59,14 @@ async function setupWebcam() {
 }*/
 
 
-async function setupWebcam() {
+async function setupCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+            'No camera available :(');
+    }
+
     const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
         video: {
             width: {
                 ideal: 224
@@ -71,11 +77,15 @@ async function setupWebcam() {
             facingMode: {
                 ideal: "environment"
             }
-        }
+        },
     });
     webcamElement.srcObject = stream;
-    webcamElement.play();
-    webcamElement.addEventListener('loadeddata', () => resolve(), false);
+
+    return new Promise((resolve) => {
+        webcamElement.onloadedmetadata = () => {
+            resolve(webcamElement);
+        };
+    });
 }
 
 async function run() {
