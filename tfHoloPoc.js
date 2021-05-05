@@ -59,7 +59,7 @@ async function setupWebcam() {
 }*/
 
 
-async function setupCamera() {
+async function setupWebcam() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error(
             'No camera available :(');
