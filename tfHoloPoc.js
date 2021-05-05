@@ -108,10 +108,12 @@ async function run() {
         var end = performance.now();
         var duration = end - start;
 
-        const resultArray = Array.from(result.dataSync());
-        const predClass = argMaxArray(resultArray);
+        const predClass = await result.argMax(1).data();
+        const prob = await result.array()[0][predClass];
 
-        let outputText = labels[predClass] + "\n(" + Math.round(resultArray[predClass] * 100) + "% | " + Math.round(duration) + "ms | Avg: " + Math.round(avgDuration) + "ms)";
+        result.dispose();
+
+        let outputText = labels[predClass] + "\n(" + Math.round(prob * 100) + "% | " + Math.round(duration) + "ms | Avg: " + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
 
         times[i] = duration;
@@ -143,12 +145,6 @@ async function setup() {
         run();
     });
 }
-
-// Adapted from https://gist.github.com/engelen/fbce4476c9e68c52ff7e5c2da5c24a28
-function argMaxArray(array) {
-    return [].map.call(array, (x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
-}
-
 
 function calcAvgArray(array) {
     let sum = 0;
