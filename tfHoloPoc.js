@@ -108,10 +108,11 @@ async function run() {
         var end = performance.now();
         var duration = end - start;
 
-        const predClass = await result.argMax(1).data();
+        const predClass = await result.argMax(1).data()[0];
         const prob = await result.array()[0][predClass];
 
         result.dispose();
+        img.dispose();
 
         let outputText = labels[predClass] + "\n(" + Math.round(prob * 100) + "% | " + Math.round(duration) + "ms | Avg: " + Math.round(avgDuration) + "ms)";
         document.getElementById("output").setAttribute("text", "value", outputText);
