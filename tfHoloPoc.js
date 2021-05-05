@@ -1,6 +1,11 @@
 let net;
 let webcamElement;
 
+const IMAGE_SIZE = 224;
+const INPUT_MIN = 0;
+const INPUT_MAX = 1;
+const NORMALIZATION_CONSTANT = (INPUT_MAX - INPUT_MIN) / 255.0;
+
 async function createVideoElement() {
     webcamElement = document.createElement('video');
     webcamElement.setAttribute("autoplay", "");
@@ -29,17 +34,16 @@ async function setupWebcam() {
 }
 
 function preprocess(img) {
-    const IMAGE_SIZE = 224;
-    const inputMin = 0;
-    const inputMax = 1;
+    // Adapted from https://github.com/tensorflow/tfjs-models/blob/master/mobilenet/src/index.ts
+
 
     return tf.tidy(() => {
           img = tf.browser.fromPixels(img);
         
         // Normalize the image from [0, 255] to [inputMin, inputMax].
         const normalized = tf.add(
-            tf.mul(tf.cast(img, 'float32'), (inputMax - inputMin) / 255.0),
-            inputMin);
+            tf.mul(tf.cast(img, 'float32'), NORMALIZATION_CONSTANT),
+            INPUT_MIN);
   
         // Resize the image to
         let resized = normalized;
