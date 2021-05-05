@@ -39,7 +39,7 @@ async function setupWebcam() {
                 min: 224
             },
             facingMode: {
-                exact: 'environment'
+                exact: "environment"
             }
         }
     });
