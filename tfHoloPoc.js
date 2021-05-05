@@ -1,11 +1,14 @@
 let net;
-let video;
+let webcamElement;
 
-const IMAGE_SIZE = 224;
-const INPUT_MIN = 0;
-const INPUT_MAX = 1;
+async function createVideoElement() {
+    webcamElement = document.createElement('video');
+    webcamElement.setAttribute("autoplay", "");
+    webcamElement.setAttribute("playsinline", "");
+    webcamElement.setAttribute("width", "224");
+    webcamElement.setAttribute("height", "224");
+}
 
-/*
 async function setupWebcam() {
     return new Promise((resolve, reject) => {
         const navigatorAny = navigator;
@@ -23,19 +26,20 @@ async function setupWebcam() {
             reject();
         }
     });
-}*/
-
+}
 
 function preprocess(img) {
-
+    const IMAGE_SIZE = 224;
+    const inputMin = 0;
+    const inputMax = 1;
 
     return tf.tidy(() => {
           img = tf.browser.fromPixels(img);
         
         // Normalize the image from [0, 255] to [inputMin, inputMax].
         const normalized = tf.add(
-            tf.mul(tf.cast(img, 'float32'), (INPUT_MAX - INPUT_MIN) / 255.0),
-            INPUT_MIN);
+            tf.mul(tf.cast(img, 'float32'), (inputMax - inputMin) / 255.0),
+            inputMin);
   
         // Resize the image to
         let resized = normalized;
@@ -52,32 +56,6 @@ function preprocess(img) {
       });
     }
 
-
-async function setupWebcam() {
-    let webcamElement = document.createElement('video');
-
-    webcamElement.setAttribute("width", "224");
-    webcamElement.setAttribute("height", "224");
-
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error(
-            'No camera available :(');
-    }
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: true
-    });
-    webcamElement.srcObject = stream;
-
-    return new Promise((resolve) => {
-        webcamElement.onloadedmetadata = () => {
-            resolve(webcamElement);
-        };
-    });
-
-}
-
 async function run() {
     let i = 0;
     let blockSize = 100;
@@ -92,7 +70,7 @@ async function run() {
             i = 0;
         }
 
-        const img = preprocess(video);
+        const img = preprocess(webcamElement);
 
         const start = performance.now();
         const result = await net.predict(img);
@@ -127,8 +105,8 @@ async function setup() {
 
     console.log("Used tf.js backend: " + tf.getBackend());
 
-    video = await setupWebcam();
-    video.play();
+    await createVideoElement();
+    await setupWebcam();
 
     document.getElementById("output").setAttribute("text", "value", "Ready!\nPlease click on the AR button in\nthe bottom right corner to start!");
 
