@@ -9,7 +9,7 @@ async function createVideoElement() {
     webcamElement.setAttribute("height", "224");
 }
 
-/*
+
 async function setupWebcam() {
     return new Promise((resolve, reject) => {
         const navigatorAny = navigator;
@@ -27,38 +27,38 @@ async function setupWebcam() {
             reject();
         }
     });
-}*/
+}
+
+
+function preprocess(img) {
+    const IMAGE_SIZE = 224;
+    const inputMin = 0;
+    const inputMax = 1;
+
+    return tf.tidy(() => {
+          img = tf.browser.fromPixels(img);
+        
+        // Normalize the image from [0, 255] to [inputMin, inputMax].
+        const normalized = tf.add(
+            tf.mul(tf.cast(img, 'float32'), (inputMax - inputMin) / 255.0),
+            inputMin);
+  
+        // Resize the image to
+        let resized = normalized;
+        if (img.shape[0] !== IMAGE_SIZE || img.shape[1] !== IMAGE_SIZE) {
+          const alignCorners = true;
+          resized = tf.image.resizeBilinear(
+              normalized, [IMAGE_SIZE, IMAGE_SIZE], alignCorners);
+        }
+  
+        // Reshape so we can pass it to predict.
+        const result = tf.reshape(resized, [-1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+    
+        return result;
+      });
+    }
 
 /*
-async function setupWebcam() {
-    return new Promise((resolve, reject) => {
-        const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-            width: {
-                ideal: 224
-            },
-            height: {
-                ideal: 224
-            },
-            facingMode: {
-                ideal: "environment"
-            }
-        }
-    });
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia({ video: true },
-                stream => {
-                    webcamElement.srcObject = stream;
-                    webcamElement.addEventListener('loadeddata', () => resolve(), false);
-                },
-                error => reject());
-        } else {
-            reject();
-        }
-    });
-}*/
-
-
 async function setupWebcam() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error(
@@ -85,7 +85,7 @@ async function setupWebcam() {
     });
 
     webcamElement.play();
-}
+}*/
 
 async function run() {
     let i = 0;
@@ -101,8 +101,10 @@ async function run() {
             i = 0;
         }
 
+        const img = preprocess(webcamElement);
+
         var start = performance.now();
-        const result = await net.classify(webcamElement);
+        const result = await net.classify(img);
         var end = performance.now();
         var duration = end - start;
 
