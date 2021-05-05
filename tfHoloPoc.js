@@ -86,6 +86,8 @@ async function setupWebcam() {
             resolve(webcamElement);
         };
     });
+
+    webcamElement.play();
 }
 
 async function run() {
